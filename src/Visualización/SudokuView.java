@@ -8,13 +8,15 @@ import java.awt.event.ActionListener;
 public class SudokuView extends JFrame {
     private JButton[][] celdasBotones = new JButton[9][9];
     private JButton[] botonesNumericos = new JButton[9];
-    private JButton btnPista, btnNuevaPartida;
-    private JComboBox<String> comboDificultad;
+    private JButton btnPista, btnAbandonar;
     
     private JLabel lblDificultad, lblErrores, lblPuntuacion, lblCronometro;
     
     private int filaSeleccionada = -1;
     private int columnaSeleccionada = -1;
+
+    private int[][] matrizCache = new int[9][9];
+    private boolean[][] inicialesCache = new boolean[9][9];
 
     public SudokuView() {
         setTitle("Java Sudoku Classic");
@@ -43,7 +45,7 @@ public class SudokuView extends JFrame {
         Font fontStats = new Font("Arial", Font.BOLD, 14);
         lblDificultad.setFont(fontStats);
         lblErrores.setFont(fontStats);
-        lblErrores.setForeground(new Color(231, 76, 60)); // Rojo visual Sudoku.com
+        lblErrores.setForeground(new Color(231, 76, 60)); 
         lblPuntuacion.setFont(fontStats);
         lblCronometro.setFont(fontStats);
 
@@ -105,20 +107,7 @@ public class SudokuView extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(8, 0, 8, 0);
 
-        // Selector de dificultad y nueva partida
-        String[] diffs = {"Fácil", "Medio", "Difícil", "Experto"};
-        comboDificultad = new JComboBox<>(diffs);
-        comboDificultad.setSelectedItem("Medio");
-        
-        btnNuevaPartida = new JButton("Nuevo Juego");
-        btnNuevaPartida.setBackground(new Color(52, 152, 219));
-        btnNuevaPartida.setForeground(Color.WHITE);
-        btnNuevaPartida.setFont(new Font("Arial", Font.BOLD, 13));
-
-        gbc.gridx = 0; gbc.gridy = 0; panelDerecho.add(comboDificultad, gbc);
-        gbc.gridy = 1; panelDerecho.add(btnNuevaPartida, gbc);
-
-        // Teclado numérico interactivo 1-9
+        // Teclado numérico interactivo
         JPanel panelTeclado = new JPanel(new GridLayout(3, 3, 5, 5));
         panelTeclado.setBackground(Color.WHITE);
         for (int i = 0; i < 9; i++) {
@@ -128,48 +117,84 @@ public class SudokuView extends JFrame {
             botonesNumericos[i].setFocusPainted(false);
             panelTeclado.add(botonesNumericos[i]);
         }
-        gbc.gridy = 2; panelDerecho.add(panelTeclado, gbc);
+        gbc.gridx = 0; gbc.gridy = 0; panelDerecho.add(panelTeclado, gbc);
 
         // Botón de pistas
         btnPista = new JButton("💡 Obtener Pista");
         btnPista.setFont(new Font("Arial", Font.BOLD, 13));
         btnPista.setBackground(new Color(241, 196, 15));
         btnPista.setForeground(Color.BLACK);
-        gbc.gridy = 3; panelDerecho.add(btnPista, gbc);
+        gbc.gridy = 1; panelDerecho.add(btnPista, gbc);
+
+        // Botón para salir al menú principal sin guardar
+        btnAbandonar = new JButton("🚪 Abandonar Partida");
+        btnAbandonar.setFont(new Font("Arial", Font.BOLD, 13));
+        btnAbandonar.setBackground(new Color(231, 76, 60));
+        btnAbandonar.setForeground(Color.WHITE);
+        btnAbandonar.setOpaque(true);
+        btnAbandonar.setBorderPainted(false);
+        gbc.gridy = 2; panelDerecho.add(btnAbandonar, gbc);
 
         add(panelDerecho, BorderLayout.EAST);
     }
 
     private void marcarCeldaSeleccionada(int fila, int col) {
-        // Desmarcar anterior visualmente
-        if (filaSeleccionada != -1 && columnaSeleccionada != -1) {
-            celdasBotones[filaSeleccionada][columnaSeleccionada].setBorder(new LineBorder(new Color(220, 220, 220), 1));
-        }
-        
         filaSeleccionada = fila;
         columnaSeleccionada = col;
-        
-        // Resaltar celda activa seleccionada azul cielo
-        celdasBotones[fila][col].setBorder(new LineBorder(new Color(52, 152, 219), 3));
+        ejecutarColoreadoFiltros();
     }
 
     public void actualizarTablero(int[][] matriz, boolean[][] iniciales) {
         for (int r = 0; r < 9; r++) {
+            System.arraycopy(matriz[r], 0, this.matrizCache[r], 0, 9);
+            System.arraycopy(iniciales[r], 0, this.inicialesCache[r], 0, 9);
+        }
+        ejecutarColoreadoFiltros();
+    }
+
+    private void ejecutarColoreadoFiltros() {
+        int numeroEnfoque = 0;
+        if (filaSeleccionada != -1 && columnaSeleccionada != -1) {
+            numeroEnfoque = matrizCache[filaSeleccionada][columnaSeleccionada];
+        }
+
+        for (int r = 0; r < 9; r++) {
             for (int c = 0; c < 9; c++) {
-                int valor = matriz[r][c];
-                celdasBotones[r][c].setText(valor == 0 ? "" : String.valueOf(valor));
+                int valorCelda = matrizCache[r][c];
+                JButton btn = celdasBotones[r][c];
                 
-                if (iniciales[r][c]) {
-                    celdasBotones[r][c].setFont(new Font("Arial", Font.BOLD, 22));
-                    celdasBotones[r][c].setForeground(new Color(44, 62, 80)); // Gris oscuro/Negro
-                    celdasBotones[r][c].setBackground(new Color(240, 240, 240));
+                btn.setText(valorCelda == 0 ? "" : String.valueOf(valorCelda));
+
+                boolean esMismaCelda = (r == filaSeleccionada && c == columnaSeleccionada);
+                boolean esMismoNumero = (numeroEnfoque != 0 && valorCelda == numeroEnfoque);
+                boolean comparteEjeOBloque = (filaSeleccionada != -1 && (r == filaSeleccionada || c == columnaSeleccionada || (r / 3 == filaSeleccionada / 3 && c / 3 == columnaSeleccionada / 3)));
+
+                // Sistema de resaltado visual avanzado (Gris claro para el radio de acción completo)
+                if (esMismaCelda) {
+                    btn.setBackground(new Color(187, 222, 251)); // Azul selección de enfoque
+                } else if (esMismoNumero) {
+                    btn.setBackground(new Color(165, 198, 235)); // Azul secundario para números idénticos coincidentes
+                } else if (comparteEjeOBloque) {
+                    btn.setBackground(new Color(232, 232, 232)); // GRIS CLARO para filas, columnas y bloques del radio de acción
                 } else {
-                    celdasBotones[r][c].setFont(new Font("Arial", Font.PLAIN, 22));
-                    celdasBotones[r][c].setForeground(new Color(41, 128, 185)); // Azul entradas de usuario
-                    celdasBotones[r][c].setBackground(Color.WHITE);
+                    btn.setBackground(inicialesCache[r][c] ? new Color(245, 245, 245) : Color.WHITE);
                 }
+
+                // Colores tipográficos
+                if (inicialesCache[r][c]) {
+                    btn.setFont(new Font("Arial", Font.BOLD, 22));
+                    btn.setForeground(new Color(44, 62, 80)); 
+                } else {
+                    btn.setFont(new Font("Arial", Font.PLAIN, 22));
+                    btn.setForeground(new Color(41, 128, 185)); 
+                }
+                btn.setBorder(new LineBorder(new Color(225, 225, 225), 1));
             }
         }
+    }
+
+    public void cambiarVisibilidadBotonNumerico(int numero, boolean visible) {
+        botonesNumericos[numero - 1].setVisible(visible);
     }
 
     public void actualizarEstado(String diff, int errores, int maxErrores, int puntos, int totalSegundos) {
@@ -182,11 +207,9 @@ public class SudokuView extends JFrame {
         lblCronometro.setText(String.format("Tiempo: %02d:%02d", mins, secs));
     }
 
-    // Getters para capturar eventos de entrada
     public int getFilaSeleccionada() { return filaSeleccionada; }
     public int getColumnaSeleccionada() { return columnaSeleccionada; }
-    public String getDificultadSeleccionada() { return (String) comboDificultad.getSelectedItem(); }
-    public void addNuevaPartidaListener(ActionListener al) { btnNuevaPartida.addActionListener(al); }
     public void addPistaListener(ActionListener al) { btnPista.addActionListener(al); }
+    public void addAbandonarListener(ActionListener al) { btnAbandonar.addActionListener(al); }
     public void addTecladoNumListener(int numero, ActionListener al) { botonesNumericos[numero - 1].addActionListener(al); }
 }

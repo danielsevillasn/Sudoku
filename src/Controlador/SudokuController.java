@@ -2,6 +2,7 @@ package Controlador;
 
 import Modelo.SudokuModel;
 import Visualización.SudokuView;
+import Visualización.PantallaInicio;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.swing.SwingUtilities;
 
 public class SudokuController {
     private SudokuModel model;
@@ -26,7 +28,8 @@ public class SudokuController {
     }
 
     private void inicializarListeners() {
-        view.addNuevaPartidaListener(e -> comenzarNuevoJuego());
+        // Volver al menú inicial sin guardar
+        view.addAbandonarListener(e -> regresarAlMenuInicio());
 
         view.addPistaListener(e -> {
             int r = view.getFilaSeleccionada();
@@ -40,7 +43,6 @@ public class SudokuController {
             }
         });
 
-        // Eventos para el teclado interactivo en pantalla (1 al 9)
         for (int i = 1; i <= 9; i++) {
             final int numero = i;
             view.addTecladoNumListener(numero, new ActionListener() {
@@ -53,10 +55,6 @@ public class SudokuController {
     }
 
     private void comenzarNuevoJuego() {
-        if (cronometroVisual != null)
-            cronometroVisual.stop();
-
-        model.nuevoJuego(view.getDificultadSeleccionada());
         sincronizarVistaYModelo();
 
         cronometroVisual = new Timer(1000, e -> {
@@ -96,26 +94,45 @@ public class SudokuController {
             JOptionPane.showMessageDialog(view,
                     "🎉 ¡Enhorabuena! Has resuelto con éxito el Sudoku.\nPuntuación final: " + model.getPuntuacion(),
                     "¡Victoria!", JOptionPane.INFORMATION_MESSAGE);
-            comenzarNuevoJuego();
+            regresarAlMenuInicio();
         } else if (model.esPartidaPerdida()) {
             cronometroVisual.stop();
             guardarResultadoEnBaseDatos("DERROTA");
             JOptionPane.showMessageDialog(view, "❌ Has cometido 3 errores. Fin de la partida.", "Game Over",
                     JOptionPane.ERROR_MESSAGE);
-            comenzarNuevoJuego();
+            regresarAlMenuInicio();
         }
+    }
+
+    private void regresarAlMenuInicio() {
+        if (cronometroVisual != null) {
+            cronometroVisual.stop();
+        }
+        view.dispose(); // Destruye la ventana de juego actual
+        
+        // Abre una nueva pantalla de inicio limpia
+        SwingUtilities.invokeLater(() -> {
+            PantallaInicio menu = new PantallaInicio();
+            menu.setVisible(true);
+        });
     }
 
     private void sincronizarVistaYModelo() {
         view.actualizarTablero(model.getTableroActual(), model.getCeldasIniciales());
         view.actualizarEstado(model.getDificultad(), model.getErrores(), model.getMAX_ERRORES(), model.getPuntuacion(),
                 model.getTiempoSegundos());
+        
+        for (int i = 1; i <= 9; i++) {
+            boolean completado = model.esNumeroCompletado(i);
+            view.cambiarVisibilidadBotonNumerico(i, !completado);
+        }
     }
 
     private void guardarResultadoEnBaseDatos(String resultado) {
         String query = "INSERT INTO estadisticas (dificultad, tiempo_segundos, puntuacion, errores, resultado) VALUES (?, ?, ?, ?, ?)";
+        // CORREGIDO: Eliminada la llamada redundante .getConnection() sobre el objeto conn
         try (Connection conn = DriverManager.getConnection(DB_URL);
-                PreparedStatement pstmt = conn.getConnection().prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) { 
 
             pstmt.setString(1, model.getDificultad());
             pstmt.setInt(2, model.getTiempoSegundos());

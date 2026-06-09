@@ -1,9 +1,6 @@
 package Principal;
 
-import Controlador.SudokuController;
-import Modelo.SudokuModel;
-import Visualización.SudokuView;
-
+import Visualización.PantallaInicio;
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -19,19 +16,16 @@ public class Main {
     public static void main(String[] args) {
         inicializarBaseDatos();
 
-        // Estilo visual del sistema operativo
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Ejecución de la arquitectura MVC
+        // Arranca mostrando la interfaz de bienvenida
         SwingUtilities.invokeLater(() -> {
-            SudokuModel model = new SudokuModel();
-            SudokuView view = new SudokuView();
-            new SudokuController(model, view);
-            view.setVisible(true);
+            PantallaInicio inicio = new PantallaInicio();
+            inicio.setVisible(true);
         });
     }
 

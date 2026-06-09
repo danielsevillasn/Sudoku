@@ -24,7 +24,6 @@ public class SudokuModel {
         generarTableroSimulado();
     }
 
-    // Generador base funcional (Se puede expandir con algoritmos de backtracking)
     private void generarTableroSimulado() {
         int[][] baseSolucion = {
             {5, 3, 4, 6, 7, 8, 9, 1, 2},
@@ -42,7 +41,6 @@ public class SudokuModel {
             System.arraycopy(baseSolucion[r], 0, this.tableroSolucion[r], 0, 9);
         }
 
-        // Ajuste de pistas visibles según dificultad
         int celdasAOcultar = switch (dificultad) {
             case "Fácil" -> 30;
             case "Medio" -> 45;
@@ -51,7 +49,6 @@ public class SudokuModel {
             default -> 45;
         };
 
-        // Clonar y vaciar celdas aleatoriamente
         for (int r = 0; r < 9; r++) {
             System.arraycopy(tableroSolucion[r], 0, tableroActual[r], 0, 9);
             for (int c = 0; c < 9; c++) {
@@ -71,16 +68,29 @@ public class SudokuModel {
         }
     }
 
+    // Comprueba si un número se ha colocado correctamente las 9 veces reglamentarias
+    public boolean esNumeroCompletado(int num) {
+        int contador = 0;
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                if (tableroActual[r][c] == num) {
+                    contador++;
+                }
+            }
+        }
+        return contador == 9;
+    }
+
     public boolean proponerValor(int fila, int columna, int valor) {
         if (celdasIniciales[fila][columna]) return false;
 
         if (tableroSolucion[fila][columna] == valor) {
             tableroActual[fila][columna] = valor;
-            puntuacion += 100; // Incremento clásico estilo sudoku.com
+            puntuacion += 100; 
             return true;
         } else {
             errores++;
-            puntuacion = Math.max(0, puntuacion - 50); // Penalización por fallo
+            puntuacion = Math.max(0, puntuacion - 50); 
             return false;
         }
     }
@@ -90,7 +100,7 @@ public class SudokuModel {
         if (tableroActual[fila][columna] == tableroSolucion[fila][columna]) return false;
 
         tableroActual[fila][columna] = tableroSolucion[fila][columna];
-        puntuacion = Math.max(0, puntuacion - 20); // La pista descuenta puntos
+        puntuacion = Math.max(0, puntuacion - 20); 
         return true;
     }
 
@@ -107,7 +117,6 @@ public class SudokuModel {
         return errores >= MAX_ERRORES;
     }
 
-    // Getters y Setters para el Controlador y la Vista
     public int[][] getTableroActual() { return tableroActual; }
     public boolean[][] getCeldasIniciales() { return celdasIniciales; }
     public String getDificultad() { return dificultad; }
