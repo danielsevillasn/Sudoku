@@ -1,0 +1,64 @@
+# ==========================================
+# 1. ARCHIVOS COMPILADOS Y DE EJECUCIÓN (JAVA)
+# ==========================================
+# Ignora las clases compiladas individualmente
+*.class
+
+# Archivos de registro (logs)
+*.log
+
+# Paquetes empaquetados (por si generas ejecutables)
+*.jar
+!lib/
+!lib/*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# Directorios de salida por defecto (VS Code, Eclipse, NetBeans)
+bin/
+out/
+
+# Directorios de construcción si usas herramientas de automatización (Maven/Gradle)
+target/
+build/
+.gradle/
+
+# ==========================================
+# 2. CONFIGURACIÓN DE VISUAL STUDIO CODE
+# ==========================================
+# Ignora la carpeta de configuración local de VS Code
+.vscode/
+
+# NOTA OPCIONAL: Si trabajas en equipo y quieres compartir la configuración de ejecución (launch.json)
+# para que todos tengan los mismos paths de ejecución, borra la línea ".vscode/" de arriba
+# y desescomenta las siguientes 4 líneas:
+# .vscode/*
+# !.vscode/launch.json
+# !.vscode/tasks.json
+# !.vscode/settings.json
+
+# Archivos de espacio de trabajo de VS Code e historial
+*.code-workspace
+.history/
+
+# ==========================================
+# 3. BASE DE DATOS (SQLITE)
+# ==========================================
+# Ignora el archivo binario de la base de datos (evita conflictos de datos locales)
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos temporales y de bloqueo que genera SQLite en tiempo de ejecución
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ==========================================
+# 4. ARCHIVOS DEL SISTEMA OPERATIVO
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
