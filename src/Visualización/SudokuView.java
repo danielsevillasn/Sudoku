@@ -20,7 +20,7 @@ public class SudokuView extends JFrame {
 
     public SudokuView() {
         setTitle("Java Sudoku Classic");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(750, 600);
         setLocationRelativeTo(null);
         setResizable(false);

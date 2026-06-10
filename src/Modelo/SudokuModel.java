@@ -1,6 +1,8 @@
 package Modelo;
 
-public class SudokuModel {
+import java.io.Serializable;
+
+public class SudokuModel implements Serializable{
     private int[][] tableroSolucion = new int[9][9];
     private int[][] tableroActual = new int[9][9];
     private boolean[][] celdasIniciales = new boolean[9][9];

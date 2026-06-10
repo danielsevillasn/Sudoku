@@ -15,6 +15,7 @@
 *.ear
 *.zip
 *.tar.gz
+*.dat
 
 # Directorios de salida por defecto (VS Code, Eclipse, NetBeans)
 bin/
