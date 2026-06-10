@@ -33,20 +33,30 @@ public class Main {
         File dbFile = new File("sudoku.db");
         if (!dbFile.exists()) {
             System.out.println("Base de datos no detectada. Inicializando con schema.sql...");
-            try (Connection conn = DriverManager.getConnection(DB_URL);
-                    Statement stmt = conn.createStatement();
-                    BufferedReader br = new BufferedReader(new FileReader("schema.sql"))) {
 
-                StringBuilder sql = new StringBuilder();
-                String linea;
-                while ((linea = br.readLine()) != null) {
-                    sql.append(linea).append("\n");
-                    if (linea.trim().endsWith(";")) {
-                        stmt.execute(sql.toString());
-                        sql = new StringBuilder();
+            try {
+                //FORZAR LA CARGA DEL DRIVER (Evita el error 'No suitable driver found')
+                Class.forName("org.sqlite.JDBC");
+
+                // Una vez cargado el driver, abrimos la conexión de forma segura
+                try (Connection conn = DriverManager.getConnection(DB_URL);
+                        Statement stmt = conn.createStatement();
+                        BufferedReader br = new BufferedReader(new FileReader("schema.sql"))) {
+
+                    StringBuilder sql = new StringBuilder();
+                    String linea;
+                    while ((linea = br.readLine()) != null) {
+                        sql.append(linea).append("\n");
+                        if (linea.trim().endsWith(";")) {
+                            stmt.execute(sql.toString());
+                            sql = new StringBuilder();
+                        }
                     }
+                    System.out.println("Base de datos creada e inicializada correctamente.");
                 }
-                System.out.println("Base de datos creada e inicializada correctamente.");
+            } catch (ClassNotFoundException e) {
+                System.err
+                        .println("Error crítico: No se encontró el conector SQLite en el proyecto. " + e.getMessage());
             } catch (Exception e) {
                 System.err.println("Error al inicializar la base de datos: " + e.getMessage());
             }

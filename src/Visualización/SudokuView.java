@@ -120,14 +120,14 @@ public class SudokuView extends JFrame {
         gbc.gridx = 0; gbc.gridy = 0; panelDerecho.add(panelTeclado, gbc);
 
         // Botón de pistas
-        btnPista = new JButton("💡 Obtener Pista");
+        btnPista = new JButton("Obtener Pista");
         btnPista.setFont(new Font("Arial", Font.BOLD, 13));
         btnPista.setBackground(new Color(241, 196, 15));
         btnPista.setForeground(Color.BLACK);
         gbc.gridy = 1; panelDerecho.add(btnPista, gbc);
 
         // Botón para salir al menú principal sin guardar
-        btnAbandonar = new JButton("🚪 Abandonar Partida");
+        btnAbandonar = new JButton("Abandonar Partida");
         btnAbandonar.setFont(new Font("Arial", Font.BOLD, 13));
         btnAbandonar.setBackground(new Color(231, 76, 60));
         btnAbandonar.setForeground(Color.WHITE);
@@ -171,11 +171,12 @@ public class SudokuView extends JFrame {
 
                 // Sistema de resaltado visual avanzado (Gris claro para el radio de acción completo)
                 if (esMismaCelda) {
-                    btn.setBackground(new Color(187, 222, 251)); // Azul selección de enfoque
+                    btn.setBackground(Color.BLUE); // Azul selección de enfoque
                 } else if (esMismoNumero) {
-                    btn.setBackground(new Color(165, 198, 235)); // Azul secundario para números idénticos coincidentes
+                    btn.setBackground(Color.BLUE); // Azul secundario para números idénticos coincidentes
                 } else if (comparteEjeOBloque) {
-                    btn.setBackground(new Color(232, 232, 232)); // GRIS CLARO para filas, columnas y bloques del radio de acción
+                    btn.setBackground(Color.CYAN); // GRIS CLARO para filas, columnas y bloques del radio de acción
+                    btn.setForeground(Color.CYAN);
                 } else {
                     btn.setBackground(inicialesCache[r][c] ? new Color(245, 245, 245) : Color.WHITE);
                 }

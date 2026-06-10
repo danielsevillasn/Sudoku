@@ -92,13 +92,13 @@ public class SudokuController {
             cronometroVisual.stop();
             guardarResultadoEnBaseDatos("VICTORIA");
             JOptionPane.showMessageDialog(view,
-                    "🎉 ¡Enhorabuena! Has resuelto con éxito el Sudoku.\nPuntuación final: " + model.getPuntuacion(),
+                    "¡Enhorabuena! Has resuelto con éxito el Sudoku.\nPuntuación final: " + model.getPuntuacion(),
                     "¡Victoria!", JOptionPane.INFORMATION_MESSAGE);
             regresarAlMenuInicio();
         } else if (model.esPartidaPerdida()) {
             cronometroVisual.stop();
             guardarResultadoEnBaseDatos("DERROTA");
-            JOptionPane.showMessageDialog(view, "❌ Has cometido 3 errores. Fin de la partida.", "Game Over",
+            JOptionPane.showMessageDialog(view, "Has cometido 3 errores. Fin de la partida.", "Game Over",
                     JOptionPane.ERROR_MESSAGE);
             regresarAlMenuInicio();
         }

@@ -20,7 +20,7 @@ public class PantallaInicio extends JFrame {
         getContentPane().setBackground(Color.WHITE);
 
         // Título principal
-        JLabel lblTitulo = new JLabel("🧩 JAVA SUDOKU CLASSIC", SwingConstants.CENTER);
+        JLabel lblTitulo = new JLabel("JAVA SUDOKU CLASSIC", SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
         lblTitulo.setForeground(new Color(44, 62, 80));
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(20, 10, 5, 10));
@@ -38,11 +38,11 @@ public class PantallaInicio extends JFrame {
         txtReglas.setFont(new Font("Arial", Font.PLAIN, 13));
         txtReglas.setMargin(new Insets(10, 10, 10, 10));
         txtReglas.setText(
-            "ℹ️ SOBRE EL SUDOKU\n" +
+            "SOBRE EL SUDOKU\n" +
             "El sudoku es un juego de puzle lógico interactivo excelente para la mente que no requiere realizar cálculos ni habilidades matemáticas especiales.\n\n" +
-            "📜 CÓMO JUGAR (REGLAS BÁSICAS)\n" +
+            "CÓMO JUGAR (REGLAS BÁSICAS)\n" +
             "El objetivo es rellenar una cuadrícula de 9x9 con dígitos, de tal manera que cada columna, fila y sección de 3x3 contenga los dígitos del 1 al 9 sin repetirse. Un movimiento se considera incorrecto si el número ya existe en su misma fila, columna o cuadrante.\n\n" +
-            "💡 CONSEJOS ÚTILES:\n" +
+            "CONSEJOS ÚTILES:\n" +
             "• Consejo 1: Busca filas o bloques que contengan muchos números para deducir fácilmente las posiciones en blanco restantes.\n" +
             "• Consejo 2: Usa el descarte visual por columnas y filas contiguas."
         );
@@ -73,7 +73,7 @@ public class PantallaInicio extends JFrame {
         panelBotonesAccion.setBackground(Color.WHITE);
         panelBotonesAccion.setBorder(BorderFactory.createEmptyBorder(0, 25, 25, 25));
 
-        btnJugar = new JButton("¡Empezar a Jugar! 🚀");
+        btnJugar = new JButton("¡Empezar a Jugar!");
         btnJugar.setFont(new Font("Arial", Font.BOLD, 14));
         btnJugar.setBackground(new Color(41, 128, 185)); // Azul rey visible
         btnJugar.setForeground(Color.WHITE);
@@ -82,7 +82,7 @@ public class PantallaInicio extends JFrame {
         btnJugar.setBorderPainted(false);
         btnJugar.setPreferredSize(new Dimension(0, 48));
 
-        btnSalir = new JButton("Salir del Programa ❌");
+        btnSalir = new JButton("Salir del Programa");
         btnSalir.setFont(new Font("Arial", Font.BOLD, 14));
         btnSalir.setBackground(new Color(192, 57, 43)); // Rojo visible
         btnSalir.setForeground(Color.WHITE);
