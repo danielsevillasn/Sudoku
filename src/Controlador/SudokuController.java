@@ -17,6 +17,12 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.SwingUtilities;
 
+/**
+ * Objeto que controla el flujo del juego en si, empleando también los objetos
+ * modelo y vista
+ * 
+ * @author Dani S
+ */
 public class SudokuController {
     private SudokuModel model;
     private SudokuView view;

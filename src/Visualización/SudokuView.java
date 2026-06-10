@@ -5,6 +5,11 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * Objeto que realiza la personalización gráfica del programa
+ * 
+ * @author Dani S
+ */
 public class SudokuView extends JFrame {
     private JButton[][] celdasBotones = new JButton[9][9];
     private JButton[] botonesNumericos = new JButton[9];

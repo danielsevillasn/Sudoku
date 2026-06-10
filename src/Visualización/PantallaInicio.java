@@ -9,6 +9,12 @@ import java.io.ObjectInputStream;
 import Modelo.SudokuModel;
 import Controlador.SudokuController;
 
+/**
+ * Objeto que sirve para representar la pantalla inicio con sus diferentes
+ * funciones
+ * 
+ * @author Dani S
+ */
 public class PantallaInicio extends JFrame {
     private JComboBox<String> comboDificultad;
     private JButton btnJugar;

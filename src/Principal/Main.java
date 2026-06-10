@@ -10,6 +10,11 @@ import java.sql.Statement;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+/**
+ * Clase main que ejecuta el programa 
+ * 
+ * @author Dani S
+ */
 public class Main {
     private static final String DB_URL = "jdbc:sqlite:sudoku.db";
 
